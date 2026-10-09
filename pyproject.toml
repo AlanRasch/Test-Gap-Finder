@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "test-gap-finder"
+version = "1.0.0"
+description = "Find the untested functions that matter most in a Python project, and draft tests for them."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["python-dotenv>=1.0"]
+
+[project.optional-dependencies]
+claude = ["anthropic>=0.40"]
+dev = ["pytest>=8.0", "anthropic>=0.40"]
+
+[project.scripts]
+test-gap = "testgap.cli:main"
+
+[tool.setuptools]
+packages = ["testgap"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

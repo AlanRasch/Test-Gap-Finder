@@ -1,0 +1,4 @@
+python-dotenv>=1.0
+pytest>=8.0
+# Optional: only needed for "test-gap draft --with-claude"
+anthropic>=0.40

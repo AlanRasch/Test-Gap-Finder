@@ -1,0 +1,38 @@
+# Example GitHub Actions workflow: fail the build if less than 70% of functions are tested.
+# Copy to .github/workflows/test-gap.yml in your repository.
+name: test-gap
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test-gap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # needed only if you use --churn
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test-gap
+        run: pip install "git+https://github.com/your-user/test-gap-finder.git"
+
+      - name: Install project dependencies and coverage
+        run: |
+          pip install -r requirements.txt
+          pip install pytest coverage
+
+      - name: Run tests with coverage
+        run: coverage run -m pytest && coverage json -o coverage.json
+
+      - name: Report untested functions
+        run: test-gap scan --coverage coverage.json --format markdown -o test-gap-report.md --fail-under 70
+
+      - name: Show report in the job summary
+        if: always()
+        run: cat test-gap-report.md >> "$GITHUB_STEP_SUMMARY"
